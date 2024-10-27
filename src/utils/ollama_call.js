@@ -41,3 +41,5 @@ export async function createCustomModel(modelFrom, newModelName, rules) {
   const ollama = new Ollama({ host: OLLAMA_HOST });
   await ollama.create({ model: newModelName, modelfile: modelfile });
 }
+
+
