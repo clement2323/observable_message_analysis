@@ -4,6 +4,7 @@ title: Ollama
 
 ```js
 import {askOllama, pullModel, createCustomModel} from "./utils/ollama_call.js";
+import Markdown from 'https://esm.sh/react-markdown@9'
 ```
 
 ```js
@@ -15,34 +16,41 @@ const question = view(Inputs.textarea({
 ```
 
 ```jsx
+//import ReactMarkdown from 'react-markdown'
 
 function OllamaResponse({ question }) {
   const [reponse, setReponse] = React.useState("");
 
   React.useEffect(() => {
     async function fetchResponse() {
-      const streamResponse = await askOllama("llama2", question, true);
-      for await (const part of streamResponse) {
-        if (part.message && part.message.content) {
-          setReponse(prev => prev + part.message.content);
+      try {
+        const streamResponse = await askOllama("mistral-small", question, true);
+        for await (const part of streamResponse) {
+          if (part.message?.content) {
+            setReponse(prev => prev + part.message.content);
+          }
         }
+      } catch (error) {
+        console.error("Erreur lors de la récupération de la réponse:", error);
+        setReponse("Une erreur s'est produite lors de la récupération de la réponse.");
       }
     }
     
     if (question) {
-      setReponse(""); // Reset response when question changes
+      setReponse(""); // Réinitialiser la réponse lorsque la question change
       fetchResponse();
     }
   }, [question]);
 
   return (
-    <div style={{
-      border: '1px solid black',
-      padding: '10px',
-      fontStyle: 'italic',
-      minHeight: '100px'
-    }}>
-      {reponse}
+    <div 
+      style={{
+        border: '1px solid black',
+        padding: '10px',
+        minHeight: '100px'
+      }}
+    >
+      <Markdown>{reponse}</Markdown>
     </div>
   );
 }
