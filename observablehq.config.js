@@ -8,12 +8,18 @@ export default {
   // lets you organize them into sections and have unlisted pages.
    pages: [
      {
-       name: "Statistiques",
+       name: "Ollama",
        pages: [
-         {name: "Rapport détaillé", path: "/statistiques"},
-         {name: "Chat", path: "/ollama"}
+         {name: "Chat", path: "pages/ollama_chat"},
+         {name: "Créer Chat", path: "pages/creer_modele"}
        ]
-     }
+     },
+    {
+     name: "Rapports",
+       pages: [
+         {name: "Rapport détaillé", path: "pages/statistiques"},
+       ]
+    }
    ],
 
   // Content to add to the head of the page, e.g. for a favicon:
