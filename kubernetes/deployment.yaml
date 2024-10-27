@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        ports:
+        - containerPort: 11434
+        resources:
+          requests:
+            cpu: "4"
+            memory: "30Gi"
+          limits:
+            cpu: "6"
+            memory: "60Gi"
+        volumeMounts:
+        - name: ollama-models
+          mountPath: /root/.ollama
+        - name: nvidia
+          mountPath: /usr/local/nvidia
+          readOnly: true
+        env:
+        - name: OLLAMA_ORIGINS
+          value: "*"
+      volumes:
+      - name: ollama-models
+        persistentVolumeClaim:
+          claimName: ollama-pvc

@@ -42,4 +42,36 @@ export async function createCustomModel(modelFrom, newModelName, rules) {
   await ollama.create({ model: newModelName, modelfile: modelfile });
 }
 
+export async function recuperer_modeles_dispo() {
+  const response = await fetch(`${OLLAMA_HOST}/api/tags`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch models: ${response.statusText}`);
+  }
 
+  const data = await response.json();
+  return data.models
+    .map(model => model.name.replace(':latest', ''))
+    .filter(name => name); // Enlève les valeurs vides si jamais
+}
+
+
+// ... autres imports et fonctions ...
+
+export async function deleteModel(modelName) {
+    const response = await fetch(`${OLLAMA_HOST}/api/delete`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: modelName
+      })
+    });
+  
+    if (!response.ok) {
+      throw new Error(`Erreur lors de la suppression du modèle: ${response.statusText}`);
+    }
+  
+    return await response.json();
+  }
